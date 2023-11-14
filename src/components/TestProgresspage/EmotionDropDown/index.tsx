@@ -4,7 +4,7 @@ import styled from "styled-components";
 
 interface Props {
   name: string;
-  detailChoice: string;
+  detailChoice: number;
   handleToChangeRadio: (name: string, value: string) => void;
 }
 
@@ -18,7 +18,7 @@ function EmotionDropDown({ name, detailChoice, handleToChangeRadio }: Props) {
   ];
 
   const handleToClickSameRadio = (value: string) => {
-    if (value === detailChoice) {
+    if (Number(value) === detailChoice) {
       handleToChangeRadio(name, "0");
     }
   };
@@ -32,7 +32,7 @@ function EmotionDropDown({ name, detailChoice, handleToChangeRadio }: Props) {
             name={name}
             id={`${name} ${item.score}`}
             value={item.score}
-            checked={item.score === detailChoice}
+            checked={Number(item.score) === detailChoice}
             onClick={() => handleToClickSameRadio(item.score)}
             onChange={(e) => handleToChangeRadio(name, e.target.value)}
           />
@@ -49,11 +49,13 @@ const RadioLabel = styled.label`
   color: #eadcdc;
   cursor: pointer;
   font-weight: 600;
+  transition: color 0.2s ease;
 `;
 
 const RadioInput = styled.input`
   display: none;
   &:checked + ${RadioLabel} {
     color: #0092af;
+    transition: color 0.2s ease;
   }
 `;

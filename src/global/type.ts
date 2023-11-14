@@ -1,3 +1,5 @@
+import { AnimationControls } from "framer-motion";
+
 export interface SampleType {
   id: number | undefined;
   sampleImg: string | undefined;
@@ -32,4 +34,20 @@ export interface ResultType {
     neutral: number | undefined;
   };
   deviation: number | undefined;
+}
+
+export interface DropdownOpenType {
+  happy: boolean;
+  surprise: boolean;
+  angry: boolean;
+  fear: boolean;
+  sad: boolean;
+}
+
+export interface DropdownControlsType {
+  happy: AnimationControls;
+  surprise: AnimationControls;
+  angry: AnimationControls;
+  fear: AnimationControls;
+  sad: AnimationControls;
 }

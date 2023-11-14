@@ -1,30 +1,43 @@
 import styled from "styled-components";
+import { AnimationControls } from "framer-motion";
+import { useAtom, useSetAtom } from "jotai";
+import { detailEmotionAtom, emotionTFAtom } from "@/global/store";
+import { initialEmotion, initialEmotionDropDown } from "@/global/data";
 import { useEffect } from "react";
-import { initialEmotion } from "@/global/data";
-
+import { DropdownOpenType } from "@/global/type";
 interface props {
-  emotionTF: boolean;
-  setEmotionTF: React.Dispatch<React.SetStateAction<boolean>>;
-  setDetailEmotion: React.Dispatch<
-    React.SetStateAction<{
-      happy: number;
-      surprise: number;
-      angry: number;
-      fear: number;
-      sad: number;
-    }>
-  >;
+  emotionDetailControl: AnimationControls;
+  setDropdownOpen: React.Dispatch<React.SetStateAction<DropdownOpenType>>;
+  emotionDropdownControls: {
+    happy: AnimationControls;
+    surprise: AnimationControls;
+    angry: AnimationControls;
+    fear: AnimationControls;
+    sad: AnimationControls;
+  };
 }
 
-function EmotionTF({ setEmotionTF, emotionTF, setDetailEmotion }: props) {
+function EmotionTF({
+  emotionDetailControl,
+  setDropdownOpen,
+  emotionDropdownControls,
+}: props) {
+  const [emotionTF, setEmotionTF] = useAtom(emotionTFAtom);
+  const setDetailEmotion = useSetAtom(detailEmotionAtom);
+
   const handleTochangeRadio = () => {
-    setEmotionTF(!emotionTF);
+    setEmotionTF((prev) => !prev);
+    emotionDetailControl.start(emotionTF ? "closed" : "open");
   };
 
   useEffect(() => {
-    if (!emotionTF) {
-      setDetailEmotion(initialEmotion);
-    }
+    setDropdownOpen(initialEmotionDropDown);
+    setDetailEmotion(initialEmotion);
+    Object.keys(emotionDropdownControls).forEach((key) => {
+      emotionDropdownControls[
+        key as keyof typeof emotionDropdownControls
+      ].start("closed");
+    });
   }, [emotionTF]);
 
   return (
@@ -84,6 +97,7 @@ const RadioLabel = styled.label`
   font-weight: 600;
   border: 1px solid white;
   border-radius: 10px;
+  transition: color 0.2s ease;
 
   &:hover {
     cursor: pointer;
@@ -96,5 +110,6 @@ const Input = styled.input`
   &:checked + ${RadioLabel} {
     color: #02020f;
     background-color: #dedede; /* 선택된 경우의 배경색을 원하는 색으로 변경하세요. */
+    transition: color 0.2s ease;
   }
 `;

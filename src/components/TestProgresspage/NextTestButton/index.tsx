@@ -1,52 +1,48 @@
 import postCapturedImages from "@/apis/postCapturedImages";
 import postDetailEmotions from "@/apis/postDetailEmotions";
-import { initialEmotion } from "@/global/data";
-import { EmotionType } from "@/global/type";
+import {
+  capturedImagesAtom,
+  detailEmotionAtom,
+  emotionTFAtom,
+  imageLoadedAtom,
+  samplesAtom,
+  stepAtom,
+} from "@/global/store";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import styled from "styled-components";
+import { initialEmotion } from "@/global/data";
 
-interface Props {
-  step: number;
-  id: number | undefined;
-  detailEmotion: EmotionType;
-  capturedImages: string[];
-  setStep: React.Dispatch<React.SetStateAction<number>>;
-  setCapturedImages: React.Dispatch<React.SetStateAction<string[]>>;
-  setImageLoaded: React.Dispatch<React.SetStateAction<boolean>>;
-  setEmotionTF: React.Dispatch<React.SetStateAction<boolean>>;
-  setDetailEmotion: React.Dispatch<React.SetStateAction<EmotionType>>;
-}
-function NextTestButton({
-  step,
-  id,
-  detailEmotion,
-  capturedImages,
-  setStep,
-  setCapturedImages,
-  setImageLoaded,
-  setEmotionTF,
-  setDetailEmotion,
-}: Props) {
+function NextTestButton() {
+  const [step, setStep] = useAtom(stepAtom);
+  const id = useAtomValue(samplesAtom)[step - 1].id;
+  const [detailEmotion, setDetailEmotion] = useAtom(detailEmotionAtom);
+  const [capturedImages, setCapturedImages] = useAtom(capturedImagesAtom);
+  const setImageLoaded = useSetAtom(imageLoadedAtom);
+  const setEmotionTF = useSetAtom(emotionTFAtom);
+
   const initialization = () => {
-    setStep(step + 1);
     setCapturedImages([]);
     setImageLoaded(false);
     setEmotionTF(true);
     setDetailEmotion(initialEmotion);
   };
 
+  /*
   const handleClickNextStep = async () => {
     await Promise.all([
       postDetailEmotions({ id, detailEmotion }),
       postCapturedImages({ id, capturedImages }),
     ]);
-    initialization();
-  };
-
-  /*
-  const handleClickNextStep = async () => {
+    setStep((prev) => prev + 1);
     initialization();
   };
 */
+
+  const handleClickNextStep = () => {
+    setStep((prev) => prev + 1);
+    initialization();
+  };
+
   return <Button onClick={handleClickNextStep}>다음 테스트</Button>;
 }
 
@@ -61,6 +57,7 @@ const Button = styled.button`
   color: #cecccc;
   border: none;
   background-color: rgba(255, 255, 255, 0.25);
+  transition: background-color 0.5s ease;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -68,6 +65,7 @@ const Button = styled.button`
   &:hover {
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.3);
+    transition: background-color 0.5s ease;
   }
 `;
 

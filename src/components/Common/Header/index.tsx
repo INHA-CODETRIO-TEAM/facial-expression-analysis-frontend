@@ -1,13 +1,13 @@
-import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useLocation } from "react-router-dom";
 
 function Header() {
-  const navigate = useNavigate();
+  const location = useLocation().pathname;
   const handleClickLogo = () => {
-    navigate("/");
+    window.location.replace("/");
   };
   return (
-    <HeaderBar>
+    <HeaderBar $isHeader={location === "/"}>
       <Logo onClick={handleClickLogo}>AEFEA</Logo>
     </HeaderBar>
   );
@@ -15,7 +15,7 @@ function Header() {
 
 export default Header;
 
-const HeaderBar = styled.header`
+const HeaderBar = styled.header<{ $isHeader: boolean }>`
   position: fixed;
   top: 0;
   left: 0;
@@ -23,8 +23,8 @@ const HeaderBar = styled.header`
   height: 70px;
   display: flex;
   align-items: center;
-  background-color: transparent;
   color: #cecccc;
+  background-color: ${(props) => (props.$isHeader ? "" : "#18191e")};
   z-index: 20;
 `;
 

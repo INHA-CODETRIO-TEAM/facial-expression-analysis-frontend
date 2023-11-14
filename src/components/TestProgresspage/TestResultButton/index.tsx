@@ -2,17 +2,23 @@ import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import postDetailEmotions from "@/apis/postDetailEmotions";
 import postCapturedImages from "@/apis/postCapturedImages";
-import { EmotionType } from "@/global/type";
+import { useAtomValue } from "jotai";
+import {
+  capturedImagesAtom,
+  detailEmotionAtom,
+  samplesAtom,
+  stepAtom,
+} from "@/global/store";
 
-interface Props {
-  detailEmotion: EmotionType;
-  id: number | undefined;
-  capturedImages: string[];
-}
+function TestResultButton() {
+  const detailEmotion = useAtomValue(detailEmotionAtom);
+  const step = useAtomValue(stepAtom);
+  const id = useAtomValue(samplesAtom)[step - 1].id;
+  const capturedImages = useAtomValue(capturedImagesAtom);
 
-function TestResultButton({ detailEmotion, id, capturedImages }: Props) {
   const navigate = useNavigate();
 
+  /*
   const handleClickResult = async () => {
     await Promise.all([
       postDetailEmotions({ id, detailEmotion }),
@@ -20,12 +26,11 @@ function TestResultButton({ detailEmotion, id, capturedImages }: Props) {
     ]);
     navigate("/test/result");
   };
+  */
 
-  /*
   const handleClickResult = async () => {
     navigate("/test/result");
   };
-  */
 
   return <Button onClick={handleClickResult}>결과 보기</Button>;
 }
@@ -41,6 +46,7 @@ const Button = styled.button`
   color: #cecccc;
   border: none;
   background-color: rgba(255, 255, 255, 0.25);
+  transition: background-color 0.5s ease;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -48,6 +54,7 @@ const Button = styled.button`
   &:hover {
     cursor: pointer;
     background-color: rgba(255, 255, 255, 0.3);
+    transition: background-color 0.5s ease;
   }
 `;
 
